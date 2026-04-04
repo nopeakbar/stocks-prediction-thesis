@@ -341,6 +341,12 @@ const DashboardSkripsi = ({ isDarkMode }) => {
           </div>
         </div>
       </div>
+      <div className={`mt-2 flex-shrink-0 text-center text-[10px] transition-colors duration-300 ${
+        isDarkMode ? 'text-slate-500' : 'text-slate-400'
+      }`}>
+        This dashboard is part of a Bachelor's Thesis Research on Stock Price Prediction using Bi-LSTM. Developed by Noveanto Nur Akbar - UPN "Veteran" Yogyakarta.
+      </div>
+      
       
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
