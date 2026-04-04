@@ -3,12 +3,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 const CHART_COLORS = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#84CC16'];
 
-// Mapping deskripsi model berdasarkan tabel
 const MODEL_DESCRIPTIONS = {
   'A': 'Full Data / Window Size 60 / Baseline',
   'B': 'Full Data / Window Size 60 / Proposed',
   'C': 'Full Data / Window Size 60 / Optimized',
-  'D': 'Full Data / Window Size 60 / LSTM Std.',
+  'D': 'Full Data / Window Size 60 / Vanilla LSTM',
   'E': 'Cut Data / Window Size 30 / Baseline',
   'F': 'Cut Data / Window Size 60 / Baseline',
   'G': 'Cut Data / Window Size 60 / Optimized',
@@ -53,7 +52,6 @@ const DashboardSkripsi = ({ isDarkMode }) => {
       Object.keys(modelData[folder]).forEach(file => {
         let modelLetter = "";
         
-        // Ekstrak huruf model
         if (folder === 'A_B_models') {
           if (file.includes('without_indicators')) {
             modelLetter = "A";
@@ -77,7 +75,6 @@ const DashboardSkripsi = ({ isDarkMode }) => {
         });
       });
     });
-    // Sort berdasarkan huruf model (A, B, C...)
     return models.sort((a, b) => a.modelLetter.localeCompare(b.modelLetter));
   };
 
@@ -114,7 +111,6 @@ const DashboardSkripsi = ({ isDarkMode }) => {
           if (indexModelIni >= 0 && indexModelIni < preds.length) {
             let value = preds[indexModelIni];
             if (Array.isArray(value)) value = value[0];
-            // Pakai ID supaya datanya unik kalau ada nama duplikat
             rowData[modelInfo.id] = value;
           } else {
             rowData[modelInfo.id] = null;
@@ -128,7 +124,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
 
   if (loading) {
     return (
-      <div className={`flex flex-1 items-center justify-center w-full h-full transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f8fafc]'}`}>
+      <div className={`flex flex-1 items-center justify-center w-full h-full min-h-screen transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f8fafc]'}`}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
           <p className={`font-medium animate-pulse ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Memuat Data Model Bi-LSTM...</p>
@@ -141,10 +137,10 @@ const DashboardSkripsi = ({ isDarkMode }) => {
   const availableModels = getAllAvailableModels();
 
   return (
-    <div className={`pt-8 px-6 md:px-8 pb-6 font-sans w-full h-full flex flex-col transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
+    <div className={`pt-8 px-6 md:px-8 pb-6 font-sans w-full h-full min-h-screen flex flex-col transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
       
       {/* Header Section */}
-      <div className={`mb-8 relative overflow-hidden rounded-2xl p-6 transition-all duration-300 ${
+      <div className={`mb-8 relative overflow-hidden rounded-2xl p-6 transition-all duration-300 w-full ${
         isDarkMode ? 'border border-indigo-500/20 bg-slate-800/30 backdrop-blur-md' : 'border border-indigo-200 bg-white shadow-sm'
       }`}>
         <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-500 to-cyan-400"></div>
@@ -165,21 +161,22 @@ const DashboardSkripsi = ({ isDarkMode }) => {
       </div>
 
       {/* Model Selection Section */}
-      <div className="mb-6 z-10">
+      <div className="mb-6 z-10 w-full">
         <h3 className={`text-sm uppercase tracking-widest font-bold mb-4 flex items-center gap-2 transition-colors duration-300 ${
           isDarkMode ? 'text-slate-500' : 'text-slate-600'
         }`}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
           Pilih Model Konfigurasi
         </h3>
-        <div className="flex flex-wrap gap-3">
+        
+        {/* PERUBAHAN UTAMA: Menggunakan CSS Grid agar responsif dan rata */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 w-full">
           {availableModels.map((model) => {
             const isSelected = selectedModels.includes(model.id);
             return (
               <label 
                 key={model.id} 
-                // Diubah jadi items-start supaya kotak sejajar ke atas dengan checkbox
-                className={`flex items-start space-x-3 p-3 pr-4 rounded-xl border cursor-pointer transition-all duration-300 ease-in-out select-none ${
+                className={`flex items-start space-x-3 p-3 pr-4 w-full rounded-xl border cursor-pointer transition-all duration-300 ease-in-out select-none ${
                   isSelected 
                     ? (isDarkMode 
                         ? 'bg-indigo-500/10 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)] scale-[1.02]'
@@ -189,7 +186,6 @@ const DashboardSkripsi = ({ isDarkMode }) => {
                         : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300')
                 }`}
               >
-                {/* Kotak Checkbox (Margin top ditambahkan biar sejajar judul) */}
                 <div className={`w-5 h-5 mt-0.5 rounded flex items-center justify-center border flex-shrink-0 transition-colors ${
                   isSelected 
                     ? 'bg-indigo-500 border-indigo-500' 
@@ -208,9 +204,8 @@ const DashboardSkripsi = ({ isDarkMode }) => {
                   onChange={() => handleModelToggle(model.id)}
                 />
                 
-                {/* Container Teks dan Kotak Baru (Badge) */}
-                <div className="flex flex-col">
-                  <span className={`text-sm font-bold tracking-wide ${
+                <div className="flex flex-col overflow-hidden w-full">
+                  <span className={`text-sm font-bold tracking-wide truncate ${
                     isSelected 
                       ? (isDarkMode ? 'text-indigo-300' : 'text-indigo-800') 
                       : (isDarkMode ? 'text-slate-300' : 'text-slate-700')
@@ -218,7 +213,6 @@ const DashboardSkripsi = ({ isDarkMode }) => {
                     {model.displayName}
                   </span>
                   
-                  {/* INI KOTAK BARU UNTUK INFORMASI TAMBAHAN */}
                   <span className={`mt-1.5 text-[11px] font-medium px-2 py-1 rounded-md border w-fit transition-colors ${
                     isSelected
                       ? (isDarkMode ? 'bg-indigo-500/20 border-indigo-400/30 text-indigo-200' : 'bg-indigo-100 border-indigo-200 text-indigo-700')
@@ -235,15 +229,15 @@ const DashboardSkripsi = ({ isDarkMode }) => {
 
       {/* Chart Section */}
       {selectedModels.length === 0 ? (
-        <div className={`flex-1 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-colors duration-300 ${
+        <div className={`flex-1 min-h-[300px] w-full flex flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-colors duration-300 ${
           isDarkMode ? 'bg-slate-800/20 border-slate-700/50' : 'bg-slate-100 border-slate-300'
         }`}>
           <svg className={`w-16 h-16 mb-4 ${isDarkMode ? 'text-slate-600' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
           <p className={`font-medium ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Centang minimal satu model di atas untuk merender grafik prediksi.</p>
         </div>
       ) : (
-        <div className={`flex-1 w-full mt-4 p-4 md:p-6 transition-all duration-300 rounded-t-2xl ${
-          isDarkMode ? 'bg-slate-900/40 border-t border-slate-800/60' : 'bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]'
+        <div className={`flex-1 min-h-[400px] w-full mt-4 p-4 md:p-6 transition-all duration-300 rounded-2xl ${
+          isDarkMode ? 'bg-slate-900/40 border border-slate-800/60' : 'bg-white border border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]'
         }`}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
