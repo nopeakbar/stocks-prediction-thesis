@@ -3,7 +3,20 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 const CHART_COLORS = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#84CC16'];
 
-// Tangkap props isDarkMode dari App.jsx
+// Mapping deskripsi model berdasarkan tabel
+const MODEL_DESCRIPTIONS = {
+  'A': 'Full Data / Window Size 60 / Baseline',
+  'B': 'Full Data / Window Size 60 / Proposed',
+  'C': 'Full Data / Window Size 60 / Optimized',
+  'D': 'Full Data / Window Size 60 / LSTM Std.',
+  'E': 'Cut Data / Window Size 30 / Baseline',
+  'F': 'Cut Data / Window Size 60 / Baseline',
+  'G': 'Cut Data / Window Size 60 / Optimized',
+  'H': 'Cut Data / Window Size 30 / Optimized',
+  'I': 'Full Data / Window Size 30 / Baseline',
+  'J': 'Full Data / Window Size 30 / Optimized'
+};
+
 const DashboardSkripsi = ({ isDarkMode }) => {
   const [modelData, setModelData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,28 +51,34 @@ const DashboardSkripsi = ({ isDarkMode }) => {
     const models = [];
     Object.keys(modelData).forEach(folder => {
       Object.keys(modelData[folder]).forEach(file => {
-        let displayName = "";
+        let modelLetter = "";
+        
+        // Ekstrak huruf model
         if (folder === 'A_B_models') {
           if (file.includes('without_indicators')) {
-            displayName = "Model A (Tanpa Indikator)";
+            modelLetter = "A";
           } else {
-            displayName = "Model B (Dengan Indikator)";
+            modelLetter = "B";
           }
         } else {
-          const modelLetter = folder.split('_')[0];
-          const isWithout = file.includes('without_indicators');
-          displayName = `Model ${modelLetter} ${isWithout ? '(Tanpa Indikator)' : '(Dengan Indikator)'}`;
+          modelLetter = folder.split('_')[0];
         }
+        
+        const displayName = `Model ${modelLetter}`;
+        const description = MODEL_DESCRIPTIONS[modelLetter] || 'Konfigurasi tidak diketahui';
         
         models.push({
           id: `${folder}///${file}`,
           folder: folder,
           file: file,
-          displayName: displayName
+          displayName: displayName,
+          description: description,
+          modelLetter: modelLetter
         });
       });
     });
-    return models.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    // Sort berdasarkan huruf model (A, B, C...)
+    return models.sort((a, b) => a.modelLetter.localeCompare(b.modelLetter));
   };
 
   const handleModelToggle = (modelId) => {
@@ -95,9 +114,10 @@ const DashboardSkripsi = ({ isDarkMode }) => {
           if (indexModelIni >= 0 && indexModelIni < preds.length) {
             let value = preds[indexModelIni];
             if (Array.isArray(value)) value = value[0];
-            rowData[modelInfo.displayName] = value;
+            // Pakai ID supaya datanya unik kalau ada nama duplikat
+            rowData[modelInfo.id] = value;
           } else {
-            rowData[modelInfo.displayName] = null;
+            rowData[modelInfo.id] = null;
           }
         }
       });
@@ -158,17 +178,19 @@ const DashboardSkripsi = ({ isDarkMode }) => {
             return (
               <label 
                 key={model.id} 
-                className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl border cursor-pointer transition-all duration-300 ease-in-out select-none ${
+                // Diubah jadi items-start supaya kotak sejajar ke atas dengan checkbox
+                className={`flex items-start space-x-3 p-3 pr-4 rounded-xl border cursor-pointer transition-all duration-300 ease-in-out select-none ${
                   isSelected 
                     ? (isDarkMode 
-                        ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-300 shadow-[0_0_15px_rgba(99,102,241,0.15)] scale-[1.02]'
-                        : 'bg-indigo-50 border-indigo-400 text-indigo-700 shadow-sm scale-[1.02]')
+                        ? 'bg-indigo-500/10 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)] scale-[1.02]'
+                        : 'bg-indigo-50 border-indigo-400 shadow-sm scale-[1.02]')
                     : (isDarkMode 
-                        ? 'bg-slate-800/50 border-slate-700/50 text-slate-400 hover:bg-slate-800 hover:border-slate-600 hover:text-slate-300'
-                        : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800')
+                        ? 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 hover:border-slate-600'
+                        : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300')
                 }`}
               >
-                <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${
+                {/* Kotak Checkbox (Margin top ditambahkan biar sejajar judul) */}
+                <div className={`w-5 h-5 mt-0.5 rounded flex items-center justify-center border flex-shrink-0 transition-colors ${
                   isSelected 
                     ? 'bg-indigo-500 border-indigo-500' 
                     : (isDarkMode ? 'bg-slate-900 border-slate-600' : 'bg-white border-slate-300')
@@ -185,7 +207,26 @@ const DashboardSkripsi = ({ isDarkMode }) => {
                   checked={isSelected}
                   onChange={() => handleModelToggle(model.id)}
                 />
-                <span className="text-sm font-semibold tracking-wide">{model.displayName}</span>
+                
+                {/* Container Teks dan Kotak Baru (Badge) */}
+                <div className="flex flex-col">
+                  <span className={`text-sm font-bold tracking-wide ${
+                    isSelected 
+                      ? (isDarkMode ? 'text-indigo-300' : 'text-indigo-800') 
+                      : (isDarkMode ? 'text-slate-300' : 'text-slate-700')
+                  }`}>
+                    {model.displayName}
+                  </span>
+                  
+                  {/* INI KOTAK BARU UNTUK INFORMASI TAMBAHAN */}
+                  <span className={`mt-1.5 text-[11px] font-medium px-2 py-1 rounded-md border w-fit transition-colors ${
+                    isSelected
+                      ? (isDarkMode ? 'bg-indigo-500/20 border-indigo-400/30 text-indigo-200' : 'bg-indigo-100 border-indigo-200 text-indigo-700')
+                      : (isDarkMode ? 'bg-slate-700/50 border-slate-600 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-500')
+                  }`}>
+                    {model.description}
+                  </span>
+                </div>
               </label>
             );
           })}
@@ -265,7 +306,8 @@ const DashboardSkripsi = ({ isDarkMode }) => {
                   <Line 
                     key={modelId}
                     type="monotone" 
-                    dataKey={modelInfo.displayName} 
+                    dataKey={modelId} 
+                    name={modelInfo.displayName} 
                     stroke={CHART_COLORS[index % CHART_COLORS.length]} 
                     strokeWidth={2.5} 
                     dot={false} 
