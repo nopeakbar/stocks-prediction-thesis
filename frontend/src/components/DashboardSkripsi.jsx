@@ -163,7 +163,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
   const availableModels = getAllAvailableModels();
 
   return (
-    <div className={`p-3 md:p-4 font-sans w-full h-screen overflow-hidden flex flex-col transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
+    <div className={`p-3 md:p-4 font-sans w-full min-h-screen lg:h-screen flex flex-col overflow-x-hidden lg:overflow-hidden transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
       
       {/* Header Section */}
       <div className={`mb-3 relative overflow-hidden rounded-xl p-4 transition-all duration-300 w-full flex-shrink-0 ${
@@ -189,7 +189,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
       <div className="flex flex-col lg:flex-row gap-4 w-full flex-1 min-h-0">
         
         {/* LEFT COLUMN: Model Selection */}
-        <div className="w-full lg:w-1/4 flex flex-col flex-shrink-0 min-h-0">
+        <div className="w-full lg:w-1/4 flex flex-col flex-shrink-0 min-h-0 max-h-[40vh] lg:max-h-none">
           <div className={`p-3 rounded-xl border flex flex-col h-full transition-all duration-300 ${
             isDarkMode ? 'bg-slate-800/20 border-slate-700/50' : 'bg-white border-slate-200 shadow-sm'
           }`}>
@@ -200,7 +200,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
               Select Configuration
             </h3>
             
-            <div className="flex flex-col gap-1.5 w-full overflow-y-auto pr-1 flex-1 custom-scrollbar">
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-1.5 w-full overflow-y-auto pr-1 flex-1 custom-scrollbar">
               {availableModels.map((model) => {
                 const isSelected = selectedModels.includes(model.id);
                 return (
@@ -270,7 +270,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
                 Testing Data (80:20 Split)
               </h4>
               
-              <div className="flex flex-row gap-3">
+              <div className="flex flex-row flex-wrap gap-3 mt-2 xl:mt-0">
                 <div className={`px-2.5 py-1.5 rounded-lg border flex items-center gap-2 ${isDarkMode ? 'bg-slate-900/50 border-slate-700/50' : 'bg-slate-50 border-slate-200'}`}>
                   <div className="w-1 h-5 rounded-full bg-indigo-500"></div>
                   <div className="flex flex-col justify-center">
@@ -293,7 +293,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
             </p>
           </div>
 
-          <div className={`flex-1 min-h-0 w-full p-2 lg:p-4 rounded-xl border flex flex-col transition-all duration-300 ${
+          <div className={`flex-1 min-h-[350px] lg:min-h-0 w-full p-2 lg:p-4 rounded-xl border flex flex-col transition-all duration-300 ${
             isDarkMode ? 'bg-slate-900/40 border-slate-800/60' : 'bg-white border-slate-200 shadow-sm'
           }`}>
             {selectedModels.length === 0 ? (
