@@ -259,7 +259,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
         </div>
 
         {/* RIGHT COLUMN: Timeline Info & Chart */}
-        <div className="w-full lg:w-3/4 flex flex-col flex-1 gap-3 min-h-0">
+        <div className="w-full lg:w-3/4 flex flex-col flex-1 gap-3 lg:min-h-0">
           
           <div className={`rounded-xl border p-3 flex-shrink-0 transition-all duration-300 w-full ${
             isDarkMode ? 'bg-slate-800/40 border-slate-700/60' : 'bg-white border-slate-200 shadow-sm'
@@ -293,7 +293,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
             </p>
           </div>
 
-          <div className={`flex-1 min-h-[350px] lg:min-h-0 w-full p-2 lg:p-4 rounded-xl border flex flex-col transition-all duration-300 ${
+          <div className={`w-full h-[400px] lg:h-auto lg:flex-1 lg:min-h-0 p-2 lg:p-4 rounded-xl border flex flex-col transition-all duration-300 ${
             isDarkMode ? 'bg-slate-900/40 border-slate-800/60' : 'bg-white border-slate-200 shadow-sm'
           }`}>
             {selectedModels.length === 0 ? (
@@ -341,7 +341,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
           </div>
         </div>
       </div>
-      <div className={`mt-2 flex-shrink-0 text-center text-[10px] transition-colors duration-300 ${
+      <div className={`mt-8 lg:mt-2 mb-6 lg:mb-0 relative z-10 flex-shrink-0 text-center text-[10px] transition-colors duration-300 ${
         isDarkMode ? 'text-slate-500' : 'text-slate-400'
       }`}>
         This dashboard is part of a Bachelor's Thesis Research on Stock Price Prediction using Bi-LSTM. Developed by Noveanto Nur Akbar - UPN "Veteran" Yogyakarta.
