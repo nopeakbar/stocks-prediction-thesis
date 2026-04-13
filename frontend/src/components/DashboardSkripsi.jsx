@@ -163,7 +163,8 @@ const DashboardSkripsi = ({ isDarkMode }) => {
   const availableModels = getAllAvailableModels();
 
   return (
-    <div className={`p-3 md:p-4 font-sans w-full min-h-screen lg:h-screen flex flex-col overflow-x-hidden lg:overflow-hidden transition-colors duration-500 ${isDarkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
+    <div className={`p-3 md:p-4 font-sans w-full min-h-screen flex flex-col overflow-x-hidden transition-colors duration-500 ${
+      isDarkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
       
       {/* Header Section */}
       <div className={`mb-3 relative overflow-hidden rounded-xl p-4 transition-all duration-300 w-full flex-shrink-0 ${
@@ -186,7 +187,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
         </p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 w-full flex-1 min-h-0">
+      <div className="flex flex-col lg:flex-row gap-4 w-full">
         
         {/* LEFT COLUMN: Model Selection */}
         <div className="w-full lg:w-1/4 flex flex-col flex-shrink-0 min-h-0 max-h-[40vh] lg:max-h-none">
@@ -293,7 +294,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
             </p>
           </div>
 
-          <div className={`w-full h-[400px] lg:h-auto lg:flex-1 lg:min-h-0 p-2 lg:p-4 rounded-xl border flex flex-col transition-all duration-300 ${
+          <div className={`w-full h-[400px] lg:h-[520px] p-2 lg:p-4 rounded-xl border flex flex-col transition-all duration-300 ${
             isDarkMode ? 'bg-slate-900/40 border-slate-800/60' : 'bg-white border-slate-200 shadow-sm'
           }`}>
             {selectedModels.length === 0 ? (
@@ -341,7 +342,7 @@ const DashboardSkripsi = ({ isDarkMode }) => {
           </div>
         </div>
       </div>
-      <div className={`mt-8 lg:mt-2 mb-6 lg:mb-0 relative z-10 flex-shrink-0 text-center text-[10px] transition-colors duration-300 ${
+      <div className={`mt-8 lg:mt-2 mb-6 lg:mb-0 flex-shrink-0 text-center text-[10px] transition-colors duration-300 ${
         isDarkMode ? 'text-slate-500' : 'text-slate-400'
       }`}>
         This dashboard is part of a Bachelor's Thesis Research on Stock Price Prediction using Bi-LSTM. Developed by Noveanto Nur Akbar - UPN "Veteran" Yogyakarta.
